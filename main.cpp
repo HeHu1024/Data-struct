@@ -31,7 +31,7 @@ int main()
     {
         cout << d2[i] << endl;
     }
-    d2[5] = 5;
+    //d2[5] = 5;
 
     StaticArray<int,5> a1;
     StaticArray<int,5> a2;
@@ -50,7 +50,7 @@ int main()
         cout << a2[i] << endl;
     }
 
-    a2[10] = 100;
+    //a2[10] = 100;
 
 
    return 0;
