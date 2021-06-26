@@ -3,54 +3,49 @@
 #include "DynamicList.h"
 #include "StaticArray.h"
 #include "DynamicArray.h"
+#include "Linklist.h"
 
 using namespace std;
 using namespace DTLib;
 
 int main()
 {
-
-    DynamicArray<int> d1(5);
-
-    for(int i=0; i<d1.length(); i++)
+    Linklist<int> list;
+    for(int i=0; i<5; i++)
     {
-        d1[i] = i;
+        list.insert(i);
     }
 
-    for(int i=0; i<d1.length(); i++)
+    for(int i=0; i<list.length(); i++)
     {
-        cout << d1[i] << endl;
-    }
-    DynamicArray<int> d2(10);
-    d2 = d1;
-    d2.resize(3);
-
-    cout << endl;
-
-    for(int i=0; i<d2.length(); i++)
-    {
-        cout << d2[i] << endl;
-    }
-    //d2[5] = 5;
-
-    StaticArray<int,5> a1;
-    StaticArray<int,5> a2;
-    for( int i=0; i<a1.length(); i++ )
-    {
-        a1[i] = i;
-    }
-    a2 = a1;
-    for( int i=0; i<a1.length(); i++ )
-    {
-        cout << a1[i] << endl;
+        cout << list.get(i) << " ";
     }
     cout << endl;
-    for( int i=0; i<a2.length(); i++ )
-    {
-        cout << a2[i] << endl;
-    }
 
-    //a2[10] = 100;
+    list.remove(2);
+
+    for(int i=0; i<list.length(); i++)
+    {
+        cout << list.get(i) << " ";
+    }
+    cout << endl;
+    list.set(1,10);
+
+    for(int i=0; i<list.length(); i++)
+    {
+        cout << list.get(i) << " ";
+    }
+    cout << endl;
+
+    list.clear();
+    cout << "after clear" << endl;
+    for(int i=0; i<list.length(); i++)
+    {
+        cout << list.get(i) << " ";
+    }
+    cout << endl;
+
+
 
 
    return 0;
