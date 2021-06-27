@@ -13,6 +13,7 @@ class Linklist : public List<T>
 {
 protected:
 
+    /********************************varaible********************/
     struct Node : public Object
     {
         T value;
@@ -26,8 +27,14 @@ protected:
         char reserved[sizeof(T)];
         Node* next;
     } m_header;
-
     int m_length;
+
+    Node* m_crrent;     // 游标指针，便利元素使用
+    int m_step;         // 遍历元素移动的步数
+
+
+
+    /***************************** function *******************/
     Node* position(int i) const
     {
         Node *ret = reinterpret_cast<Node*> (&m_header);
@@ -55,7 +62,7 @@ public:
         bool ret = (0 <= i) && (i <= m_length);
         if( ret )
         {
-            Node* node = new Node();
+            Node* node = Create();
             if( node != NULL )
             {
                 Node *current = position(i);
@@ -81,7 +88,7 @@ public:
             Node* toDel = current->next;
             current->next = toDel->next;
 
-            delete toDel;
+            destory(toDel);
             m_length--;
         }
         return ret;
@@ -122,6 +129,27 @@ public:
         return ret;
     }
 
+    virtual int find(const T& e) const
+    {
+        int ret = -1;
+        // 指向第0个元素
+        Node* node = m_header.next;
+        int i = 0;
+        while( node )
+        {
+            if( node->value == e )
+            {
+                ret = i;
+                break;
+            }else
+            {
+                node = node->next;
+                i++;
+            }
+        }
+        return ret;
+    }
+
     virtual int length() const
     {
         return m_length;
@@ -132,9 +160,66 @@ public:
         {
             Node *toDel = m_header.next;
             m_header.next = toDel->next;
-            delete toDel;
+            destory(toDel);
         }
         m_length = 0;
+    }
+
+    // 实现数据元素便利提高效率，游标m_curren实现
+
+
+    // funtion 实现游标遍历元素移动的功能
+    // parma i 指定移动的位置目标. step 指定每次移动的步数
+    bool move(int i,int step = 1)
+    {
+        bool ret = ( (0 <= i) && (i <= m_length) && (step > 0) );
+        {
+            if( ret )
+            {
+                m_crrent = position(i)->next;  // 从header 开始移动
+                m_step = step;
+            }
+        }
+        return ret;
+    }
+    // 判断m_current是否移动到最后
+    bool end()
+    {
+        return (m_crrent == NULL);
+    }
+    // 获取当前m_current 指向的节点元素的
+    T current()
+    {
+        // 如果没有结束,返回当前current指向节点的值
+        if( !end() )
+        {
+            return m_crrent->value;
+        }else       // 如果已经结束了，却还要返回,抛出异常
+        {
+            THROW_EXCEPTION(InvalidOperationException,"No value at current position......");
+        }
+    }
+    // 移动游标function
+    bool next()
+    {
+        int i = 0;
+        // why i < m_step ?  ===>每次移动的步数，eg move(0,3)
+        // 从0开始遍历，每次遍历的步数3
+        while( !end() && (i < m_step) )
+        {
+            m_crrent = m_crrent->next;
+            i++;
+        }
+        return (i == m_step);
+    }
+    // 创建 Node
+    virtual Node* Create()
+    {
+        return new Node();
+    }
+    virtual void destory(Node* pn)
+    {
+        delete pn;
     }
 
     ~Linklist()
