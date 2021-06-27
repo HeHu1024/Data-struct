@@ -19,8 +19,24 @@ protected:
         Node* next;
     };
     // mutable 声明，是为了修改const成员变量
-    mutable Node m_header;
+    // mutable Node m_header 防止构造的时候调用T类型出错;
+    // 为什么struct需要继承Object ==> 防止struct m_header 在内存上与Node不同，导致crash
+    mutable struct : public Object
+    {
+        char reserved[sizeof(T)];
+        Node* next;
+    } m_header;
+
     int m_length;
+    Node* position(int i) const
+    {
+        Node *ret = reinterpret_cast<Node*> (&m_header);
+        for( int p=0; p<i; p++ )
+        {
+            ret = ret->next;
+        }
+        return ret;
+    }
 
 public:
     Linklist()
@@ -42,11 +58,7 @@ public:
             Node* node = new Node();
             if( node != NULL )
             {
-                Node *current = &m_header;
-                for(int p=0; p<i; p++ )
-                {
-                    current = current->next;
-                }
+                Node *current = position(i);
                 node->value = e;
                 node->next = current->next;
                 current->next = node;
@@ -65,11 +77,7 @@ public:
         bool ret = (0 <= i) && (i <= m_length);
         if( ret )
         {
-            Node* current = &m_header;
-            for( int p=0; p < i; p++ )
-            {
-                current = current->next;
-            }
+            Node* current = position(i);
             Node* toDel = current->next;
             current->next = toDel->next;
 
@@ -84,12 +92,7 @@ public:
         bool ret = (0 <= i) && (i <= m_length);
         if( ret )
         {
-            Node* current = &m_header;
-            for( int p=0; p < i; p++ )
-            {
-                current = current->next;
-            }
-            current->next->value = e;
+            position(i)->next->value = e;
         }
         return ret;
     }
@@ -114,12 +117,7 @@ public:
         bool ret = (0 <= i) && (i <= m_length);
         if( ret )
         {
-            Node* current = &m_header;
-            for( int p=0; p < i; p++ )
-            {
-                current = current->next;
-            }
-            e = current->next->value;
+            e = position(i)->next->value;
         }
         return ret;
     }

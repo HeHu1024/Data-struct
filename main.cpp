@@ -8,46 +8,32 @@
 using namespace std;
 using namespace DTLib;
 
+class Test
+{
+public:
+    Test()
+    {
+        throw 0;
+    }
+};
+
 int main()
 {
-    Linklist<int> list;
-    for(int i=0; i<5; i++)
+    Linklist<Test> list;
+
+    cout << "Hello Mr.He" << endl;
+
+
+    Linklist<int> list1;
+    for( int i=0; i<5; i++ )
     {
-        list.insert(i);
+        list1.insert(i,i+1);
     }
-
-    for(int i=0; i<list.length(); i++)
+    for( int i=0; i<list1.length();i++ )
     {
-        cout << list.get(i) << " ";
-    }
-    cout << endl;
-
-    list.remove(2);
-
-    for(int i=0; i<list.length(); i++)
-    {
-        cout << list.get(i) << " ";
+        cout << list1.get(i) << " ";
     }
     cout << endl;
-    list.set(1,10);
-
-    for(int i=0; i<list.length(); i++)
-    {
-        cout << list.get(i) << " ";
-    }
-    cout << endl;
-
-    list.clear();
-    cout << "after clear" << endl;
-    for(int i=0; i<list.length(); i++)
-    {
-        cout << list.get(i) << " ";
-    }
-    cout << endl;
-
-
-
-
    return 0;
 }
 
